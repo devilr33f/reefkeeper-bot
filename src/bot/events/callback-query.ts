@@ -11,6 +11,8 @@ export default async (context: CallbackQueryContext) => {
   switch (action) {
   case 'approve':
     await context.telegram.api.approveChatJoinRequest({ chat_id: config.bot.chatId, user_id: parseInt(userId) }).catch(() => {})
+
+    await context.message.delete().catch(() => {})
     break
 
   case 'reject':
