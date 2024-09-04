@@ -37,7 +37,7 @@ export default async (context: ChatJoinRequestContext) => {
     ID: <code>${context.from.id}</code>
   `
 
-  const userMessage = oneLine`
+  const userMessage = stripIndents`
     ⏳ <b>Your join request is waiting for manual approval</b>
     If you want to get informed about your request - send /start (it's telegram restriction, sorry)
 
