@@ -33,11 +33,15 @@ export default async (context: ChatJoinRequestContext) => {
 
   const message = stripIndents`
     ⏳ <b>Waiting for approval</b>
-    User: ${`${context.from.firstName} ${context.from.lastName ?? ''}`.trim()} / <code>${context.from.username ? `@${context.from.username} (${context.from.id})` : `${context.from.id}`}</code>
+    User: ${`${context.from.firstName} ${context.from.lastName ?? ''}`.trim()} ${context.from.username ? `/ @${context.from.username}` : ''}
+    ID: <code>${context.from.id}</code>
   `
 
   const userMessage = oneLine`
-    ⏳ <b>Your join request is waiting for approval</b>
+    ⏳ <b>Your join request is waiting for manual approval</b>
+    If you want to get informed about your request - send /start (it's telegram restriction, sorry)
+
+    No spam, i promise. (i don't even store your id)
   `
 
   await context.telegram.api.sendMessage({

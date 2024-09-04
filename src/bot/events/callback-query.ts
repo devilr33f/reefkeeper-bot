@@ -1,4 +1,4 @@
-import { oneLine } from 'common-tags'
+import { oneLine, stripIndents } from 'common-tags'
 import type { CallbackQueryContext } from 'puregram'
 
 import config from '@/config.js'
@@ -12,7 +12,9 @@ export default async (context: CallbackQueryContext) => {
   case 'approve':
     await context.telegram.api.approveChatJoinRequest({ chat_id: config.bot.chatId, user_id: parseInt(userId) }).catch(() => {})
 
-    await context.message.delete().catch(() => {})
+    await context.message.reply(oneLine`
+        ✅ <b>Approved</b>
+    `)
     break
 
   case 'reject':
@@ -20,8 +22,12 @@ export default async (context: CallbackQueryContext) => {
 
     context.telegram.api.sendMessage({
       chat_id: parseInt(userId),
-      text: oneLine`
+      text: stripIndents`
         ❌ <b>Your join request was rejected</b>
+
+        Maybe i don't know you, or i simply don't want you in my channel. Anyway, try again in future.
+
+        If you're REALLY want to join, please <a href="https://femboy.page?utm_source=reefkeeper">contact me</a> and write few words about yourself.
       `,
       parse_mode: 'HTML',
       link_preview_options: {
@@ -29,6 +35,10 @@ export default async (context: CallbackQueryContext) => {
       },
       suppress: true,
     })
+
+    await context.message.reply(oneLine`
+       ❌ <b>Rejected</b>
+    `).catch(() => {})
 
     break
 
