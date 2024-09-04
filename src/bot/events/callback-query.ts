@@ -14,7 +14,7 @@ export default async (context: CallbackQueryContext) => {
 
     await context.message.reply(oneLine`
         ✅ <b>Approved</b>
-    `)
+    `, { parse_mode: 'HTML' })
     break
 
   case 'reject':
@@ -38,7 +38,7 @@ export default async (context: CallbackQueryContext) => {
 
     await context.message.reply(oneLine`
        ❌ <b>Rejected</b>
-    `).catch(() => {})
+    `, { parse_mode: 'HTML' }).catch(() => {})
 
     break
 
