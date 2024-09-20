@@ -1,4 +1,4 @@
-import { oneLine, stripIndents } from 'common-tags'
+import { stripIndents } from 'common-tags'
 import { type ChatJoinRequestContext, InlineKeyboard } from 'puregram'
 
 import config from '@/config.js'
