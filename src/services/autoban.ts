@@ -1,3 +1,5 @@
+import { createDecipheriv } from 'node:crypto'
+
 import config from '@/config.js'
 
 class AutobanService {
@@ -7,6 +9,14 @@ class AutobanService {
   async getContacts (): Promise<any[]> {
     return fetch(`${this.baseUrl}/contacts`)
       .then(res => res.json())
+      .then(res => {
+        const { contacts } = res
+
+        const decipher = createDecipheriv('aes-256-cbc', Buffer.from(config.autobanApi.crypto.key, 'hex'), Buffer.from(config.autobanApi.crypto.iv, 'hex'))
+        const decrypted = Buffer.concat([decipher.update(contacts), decipher.final()])
+
+        return decrypted.toString().split(',').map(id => Number(id))
+      })
       .catch(err => {
         console.error(err)
 
