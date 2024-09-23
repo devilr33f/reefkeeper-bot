@@ -4,6 +4,7 @@ import { createLogger, format, transports } from 'winston'
 import config from '@/config.js'
 
 import { telegram } from './bot/bot.js'
+import AutobanService from './services/autoban.js'
 
 const logger = createLogger({
   level: 'info',
@@ -27,6 +28,9 @@ const init = async () => {
     (${config.package.version})
     in ${config.package.mode} mode...
   `)
+
+  const contactsCount = await AutobanService.getContacts()
+  logger.info(`Loaded contacts: ${contactsCount.length}`)
 
   telegram.updates.startPolling()
     .then(() => logger.info('Bot started'))
