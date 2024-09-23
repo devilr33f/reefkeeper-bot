@@ -9,8 +9,9 @@ export default async (context: ChatJoinRequestContext) => {
 
   const contacts = await autobanService.getContacts()
   const isContact = contacts.some(contact => contact.id === context.from.id)
+  const manualReviewEnforced = config.bot.forceManualReviewIds.includes(context.from.id)
 
-  if (isContact) {
+  if (isContact && !manualReviewEnforced) {
     await context.approve().catch(() => {})
 
     const message = stripIndents`
@@ -37,13 +38,6 @@ export default async (context: ChatJoinRequestContext) => {
     ID: <code>${context.from.id}</code>
   `
 
-  const userMessage = stripIndents`
-    ⏳ <b>Your join request is waiting for manual approval</b>
-    If you want to get informed about your request - send /start (it's telegram restriction, sorry)
-
-    No spam, i promise. (i don't even store your id)
-  `
-
   await context.telegram.api.sendMessage({
     chat_id: config.bot.adminChatId,
     text: message,
@@ -59,12 +53,21 @@ export default async (context: ChatJoinRequestContext) => {
     ]),
   })
 
-  await context.telegram.api.sendMessage({
-    chat_id: context.from.id,
-    text: userMessage,
-    parse_mode: 'HTML',
-    link_preview_options: {
-      is_disabled: true,
-    },
-  })
+  if (!manualReviewEnforced) {
+    const userMessage = stripIndents`
+      ⏳ <b>Your join request is waiting for manual approval</b>
+      If you want to get informed about your request - send /start (it's telegram restriction, sorry)
+
+      No spam, i promise. (i don't even store your id)
+    `
+
+    await context.telegram.api.sendMessage({
+      chat_id: context.from.id,
+      text: userMessage,
+      parse_mode: 'HTML',
+      link_preview_options: {
+        is_disabled: true,
+      },
+    })
+  }
 }
