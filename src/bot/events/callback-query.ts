@@ -2,6 +2,7 @@ import { oneLine, stripIndents } from 'common-tags'
 import type { CallbackQueryContext } from 'puregram'
 
 import config from '@/config.js'
+import { BanlistService } from '@/services/banlist.js'
 
 export default async (context: CallbackQueryContext) => {
   if (context.message?.chatId !== config.bot.adminChatId) return
@@ -15,6 +16,29 @@ export default async (context: CallbackQueryContext) => {
     await context.message.reply(oneLine`
         ✅ <b>Approved</b>
     `, { parse_mode: 'HTML' })
+    break
+
+  case 'ban': {
+    const isBanned = await BanlistService.get(userId)
+
+    const action = isBanned ? 'unban' : 'ban'
+
+    if (action === 'ban') {
+      await Promise.all([
+        BanlistService.add(userId),
+        context.message.reply(oneLine`
+          ⛔️ <b>Banned</b>
+        `, { parse_mode: 'HTML' }),
+      ])
+    } else {
+      await Promise.all([
+        BanlistService.remove(userId),
+        context.message.reply(oneLine`
+          🕊 <b>Unbanned</b>
+        `, { parse_mode: 'HTML' }),
+      ])
+    }
+  }
     break
 
   case 'reject':

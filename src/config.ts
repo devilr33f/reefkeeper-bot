@@ -20,6 +20,9 @@ export default {
     adminChatId: env.get('BOT_ADMIN_CHAT_ID').required().asInt(),
     forceManualReviewIds: env.get('BOT_FORCE_MANUAL_REVIEW_IDS').default('').asArray(',').map((id) => Number(id)),
   },
+  redis: {
+    url: env.get('REDIS_URL').required().asString(),
+  },
   autobanApi: {
     baseUrl: env.get('AUTOBAN_API_BASE_URL').required().asString(),
     crypto: {

@@ -50,6 +50,9 @@ export default async (context: ChatJoinRequestContext) => {
         InlineKeyboard.textButton({ text: '✅', payload: `approve:${context.from.id}` }),
         InlineKeyboard.textButton({ text: '❌', payload: `reject:${context.from.id}` }),
       ],
+      [
+        InlineKeyboard.textButton({ text: '⛔️', payload: `ban:${context.from.id}` }),
+      ],
     ]),
   })
 
