@@ -24,6 +24,8 @@ export default async (context: ChatJoinRequestContext) => {
         is_disabled: true,
       },
     })
+
+    return
   }
 
   const contacts = await autobanService.getContacts()
