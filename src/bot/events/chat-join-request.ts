@@ -3,9 +3,28 @@ import { type ChatJoinRequestContext, InlineKeyboard } from 'puregram'
 
 import config from '@/config.js'
 import autobanService from '@/services/autoban.js'
+import { BanlistService } from '@/services/banlist.js'
 
 export default async (context: ChatJoinRequestContext) => {
   if (context.chatId !== config.bot.chatId) return
+
+  if (await BanlistService.get(context.from.id)) {
+    await context.decline().catch(() => {})
+
+    const message = stripIndents`
+      ❌ <b>Banned user is trying to join</b>
+      User: ${`${context.from.firstName} ${context.from.lastName ?? ''}`.trim()} / <code>${context.from.username ? `@${context.from.username} (${context.from.id})` : `${context.from.id}`}</code>
+    `
+
+    await context.telegram.api.sendMessage({
+      chat_id: config.bot.adminChatId,
+      text: message,
+      parse_mode: 'HTML',
+      link_preview_options: {
+        is_disabled: true,
+      },
+    })
+  }
 
   const contacts = await autobanService.getContacts()
   const isContact = contacts.some(contact => contact.id === context.from.id)
