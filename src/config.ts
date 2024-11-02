@@ -25,9 +25,6 @@ export default {
   },
   autobanApi: {
     baseUrl: env.get('AUTOBAN_API_BASE_URL').required().asString(),
-    crypto: {
-      key: env.get('AUTOBAN_API_CRYPTO_KEY').required().asString(),
-      iv: env.get('AUTOBAN_API_CRYPTO_IV').required().asString(),
-    },
+    token: env.get('AUTOBAN_TOKEN').required().asString(),
   },
 }

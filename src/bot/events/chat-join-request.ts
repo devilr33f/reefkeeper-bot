@@ -29,7 +29,7 @@ export default async (context: ChatJoinRequestContext) => {
   }
 
   const contacts = await autobanService.getContacts()
-  const isContact = contacts.some(contact => contact.id === context.from.id)
+  const isContact = contacts.some(contactId => contactId === context.from.id)
   const manualReviewEnforced = config.bot.forceManualReviewIds.includes(context.from.id)
 
   if (isContact && !manualReviewEnforced) {
@@ -82,7 +82,7 @@ export default async (context: ChatJoinRequestContext) => {
       ⏳ <b>Your join request is waiting for manual approval</b>
       If you want to get informed about your request - send /start (it's telegram restriction, sorry)
 
-      No spam, i promise. (i don't even store your id)
+      No spam, i promise. (your id is stored only in buttons on admin side)
     `
 
     await context.telegram.api.sendMessage({
