@@ -1,4 +1,4 @@
-import { oneLine, stripIndents } from 'common-tags'
+import { stripIndents } from 'common-tags'
 import type { CallbackQueryContext } from 'puregram'
 
 import config from '@/config.js'
@@ -13,9 +13,7 @@ export default async (context: CallbackQueryContext) => {
   case 'approve':
     await context.telegram.api.approveChatJoinRequest({ chat_id: config.bot.chatId, user_id: parseInt(userId) }).catch(() => {})
 
-    await context.message.reply(oneLine`
-        ✅ <b>Approved</b>
-    `, { parse_mode: 'HTML' })
+    await context.message.reply('✅ <b>Approved</b>', { parse_mode: 'HTML' })
     break
 
   case 'ban': {
@@ -26,16 +24,12 @@ export default async (context: CallbackQueryContext) => {
     if (action === 'ban') {
       await Promise.all([
         BanlistService.add(userId),
-        context.message.reply(oneLine`
-          ⛔️ <b>Banned</b>
-        `, { parse_mode: 'HTML' }),
+        context.message.reply('⛔️ <b>Banned</b>', { parse_mode: 'HTML' }),
       ])
     } else {
       await Promise.all([
         BanlistService.remove(userId),
-        context.message.reply(oneLine`
-          🕊 <b>Unbanned</b>
-        `, { parse_mode: 'HTML' }),
+        context.message.reply('🕊 <b>Unbanned</b>', { parse_mode: 'HTML' }),
       ])
     }
   }
@@ -49,7 +43,7 @@ export default async (context: CallbackQueryContext) => {
       text: stripIndents`
         ❌ <b>Your join request was rejected</b>
 
-        Maybe i don't know you, or i simply don't want you in my channel. Anyway, try again in future.
+        Maybe i don't know you, or i simply don't want you in my channel. Anyway, try again in the future.
 
         If you're REALLY want to join, please <a href="https://femboy.page?utm_source=reefkeeper">contact me</a> and write few words about yourself.
       `,
@@ -60,9 +54,7 @@ export default async (context: CallbackQueryContext) => {
       suppress: true,
     })
 
-    await context.message.reply(oneLine`
-       ❌ <b>Rejected</b>
-    `, { parse_mode: 'HTML' }).catch(() => {})
+    await context.message.reply('❌ <b>Rejected</b>', { parse_mode: 'HTML' }).catch(() => {})
 
     break
 
