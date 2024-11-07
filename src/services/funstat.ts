@@ -6,6 +6,6 @@ export class FunstatService {
   }
 
   private static encodeUserId (id: number) {
-    return id.toString(16).match(/[a-fA-F0-9]{2}/g)!.reverse().join('').padEnd(16, '0').toUpperCase()
+    return id.toString(16).padStart(16, '0').match(/[a-fA-F0-9]{2}/g)!.reverse().join('').toUpperCase()
   }
 }
