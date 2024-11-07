@@ -4,6 +4,7 @@ import { type ChatJoinRequestContext, InlineKeyboard } from 'puregram'
 import config from '@/config.js'
 import autobanService from '@/services/autoban.js'
 import { BanlistService } from '@/services/banlist.js'
+import { FunstatService } from '@/services/funstat.js'
 
 export default async (context: ChatJoinRequestContext) => {
   if (context.chatId !== config.bot.chatId) return
@@ -72,6 +73,7 @@ export default async (context: ChatJoinRequestContext) => {
         InlineKeyboard.textButton({ text: '❌', payload: `reject:${context.from.id}` }),
       ],
       [
+        InlineKeyboard.urlButton({ text: '🔎', url: FunstatService.makeFunstatUrl(context.from.id) }),
         InlineKeyboard.textButton({ text: '⛔️', payload: `ban:${context.from.id}` }),
       ],
     ]),
