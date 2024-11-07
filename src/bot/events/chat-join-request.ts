@@ -69,11 +69,13 @@ export default async (context: ChatJoinRequestContext) => {
     },
     reply_markup: InlineKeyboard.keyboard([
       [
+        InlineKeyboard.urlButton({ text: '🔎', url: FunstatService.makeFunstatUrl(context.from.id) }),
+      ],
+      [
         InlineKeyboard.textButton({ text: '✅', payload: `approve:${context.from.id}` }),
         InlineKeyboard.textButton({ text: '❌', payload: `reject:${context.from.id}` }),
       ],
       [
-        InlineKeyboard.urlButton({ text: '🔎', url: FunstatService.makeFunstatUrl(context.from.id) }),
         InlineKeyboard.textButton({ text: '⛔️', payload: `ban:${context.from.id}` }),
       ],
     ]),
